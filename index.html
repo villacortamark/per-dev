@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Production Process</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#040404,#10172d,#040404);
+    color:white;
+    overflow-x:hidden;
+}
+
+.section{
+    position:relative;
+    width:100%;
+    min-height:100vh;
+    overflow:hidden;
+    background:#050505;
+    padding:80px 60px;
+}
+
+.section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background-image:
+    radial-gradient(white 1px, transparent 1px);
+    background-size:35px 35px;
+    opacity:.15;
+}
+.big-title{
+    position:absolute;
+    right:60px;
+    top:20px;
+    font-size:120px;
+    font-weight:900;
+    color:transparent;
+    -webkit-text-stroke:2px rgba(255,255,255,.2);
+    z-index:1;
+}
+.heading{
+    position:relative;
+    z-index:2;
+    text-align:center;
+    margin-bottom:70px;
+}
+
+.heading h3{
+    color:#ff8d32;
+    font-size:32px;
+    font-weight:300;
+}
+
+.heading h1{
+    color:#ff8d32;
+    font-size:54px;
+    font-weight:bold;
+}
+.timeline{
+    position:relative;
+    z-index:2;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-top:60px;
+}
+
+svg{
+    position:absolute;
+    left:0;
+    top:180px;
+    width:100%;
+    height:250px;
+    z-index:1;
+}
+
+.step{
+    width:15%;
+    position:relative;
+    z-index:2;
+}
+
+.number{
+    color:#ff8d32;
+    font-size:70px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.step h2{
+    font-size:30px;
+    margin-bottom:12px;
+}
+
+.step p{
+    color:#ddd;
+    line-height:1.6;
+    font-size:15px;
+}
+
+.product{
+    position:absolute;
+    left:34%;
+    top:170px;
+    width:140px;
+    transform:rotate(-28deg);
+    z-index:5;
+}
+
+.product img{
+    width:100%;
+}
+
+.award{
+    position:absolute;
+    right:70px;
+    bottom:70px;
+    display:flex;
+    align-items:center;
+    background:white;
+    color:#12366e;
+    border-radius:8px;
+    padding:18px 28px;
+    font-size:38px;
+    font-weight:bold;
+    box-shadow:0 15px 30px rgba(0,0,0,.4);
+}
+.badge{
+    width:120px;
+    height:120px;
+    background:#ffd37a;
+    border-radius:50%;
+    border:12px solid #294b89;
+    margin-left:20px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:60px;
+    color:#294b89;
+}
+
+@media(max-width:1100px){
+
+.timeline{
+    flex-wrap:wrap;
+    gap:40px;
+}
+
+.step{
+    width:45%;
+}
+
+.big-title{
+    font-size:70px;
+}
+
+.heading h1{
+    font-size:38px;
+}
+
+.award{
+    position:relative;
+    margin-top:80px;
+    right:auto;
+    bottom:auto;
+}
+
+.product{
+    display:none;
+}
+
+svg{
+    display:none;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<section class="section">
+<div class="glow glow1"></div>
+<div class="glow glow2"></div>
+<div class="glow glow3"></div>
+
+<div class="big-title">PER-DEV</div>
+
+<div class="heading">
+<h3>GROUP-6</h3>
+<h1>EARLY ADULTHOOD</h1>
+</div>
+
+<div class="product">
+<img src="product.png" alt="Product">
+</div>
+
+<svg viewBox="0 0 1400 300" preserveAspectRatio="none">
+<path d="
+M0 120
+C150 0 250 0 350 120
+S550 240 700 120
+S950 0 1100 120
+S1300 240 1400 120"
+fill="none"
+stroke="#19295d"
+stroke-width="4"/>
+</svg>
+
+<div class="timeline">
+
+<div class="step">
+<div class="number">1</div>
+<h2>Introduction</h2>
+<p>Early adulthood (ages 19–40) is a stage of independence, career growth, and increased responsibilities. It is an important period for building relationships, achieving financial stability, and making life decisions that shape the future.
+</p>
+</div>
+
+<div class="step">
+<div class="number">2</div>
+<h2>Physical & Cognitive Development</h2>
+<p>Physical and cognitive development in early adulthood is marked by peak health, strength, and brain maturity. Individuals develop better judgment, problem-solving, logical thinking, and decision-making skills, although physical abilities gradually decline over time.
+</p>
+</div>
+
+<div class="step">
+<div class="number">3</div>
+<h2>Emotional & Social Development</h2>
+<p>Emotional and social development refers to how a person learns to understand emotions, build relationships, and interact with others during early adulthood.
+</p>
+</div>
+
+<div class="step">
+<div class="number">4</div>
+<h2>Development Tasks & Responsibilities</h2>
+<p>During early adulthood, people focus on building careers, becoming financially independent, balancing work and personal life, supporting their families, and achieving future goals.</p>
+</div>
+
+<div class="step">
+<div class="number">5</div>
+<h2>CONCLUSIONS</h2>
+<p>Early adulthood (ages 19–40) is a stage of growth and independence. It brings challenges such as work stress, finances, and balancing responsibilities, which can be managed through good planning, self-care, and support from others.
+</p>
+</div>
+</div>
+</section>
+</body>
+</html>
