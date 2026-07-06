@@ -70,7 +70,7 @@ RESET
 html{
 
     scroll-behavior:smooth;
-    overflow:hidden;
+    overflow-y:auto;
 
 }
 
@@ -82,10 +82,11 @@ body{
 
     color:var(--white);
 
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:auto;
 
     width:100vw;
-    height:100vh;
+    min-height:100vh;
 
     position:relative;
 
@@ -375,9 +376,7 @@ PRESENTATION CONTAINER
 
     width:100vw;
 
-    height:100vh;
-
-    overflow:hidden;
+    min-height:100vh;
 
 }
     /*==================================================
@@ -400,10 +399,13 @@ SLIDES
 
     display:flex;
 
-    align-items:center;
+    align-items:flex-start;
     justify-content:center;
 
-    padding:120px 80px 80px;
+    padding:120px 80px 120px;
+
+    overflow-y:auto;
+    overflow-x:hidden;
 
     opacity:0;
     visibility:hidden;
@@ -415,6 +417,18 @@ SLIDES
     transform .8s ease,
     visibility .8s;
 
+}
+    .slide::-webkit-scrollbar{
+    width:10px;
+}
+
+.slide::-webkit-scrollbar-thumb{
+    background:var(--orange);
+    border-radius:20px;
+}
+
+.slide::-webkit-scrollbar-track{
+    background:transparent;
 }
 
 .slide.active{
@@ -441,8 +455,11 @@ CONTENT WIDTH
 
     z-index:5;
 
-}
+    min-height:100%;
 
+    padding-bottom:120px;
+
+}
 /*=========================
 BACKGROUND OUTLINE TEXT
 =========================*/
