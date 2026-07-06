@@ -3,255 +3,840 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Per-Dev daw?</title>
+<title>Adolescent Stage (12–18 Years) | Premium Presentation</title>
+
+<!-- Google Fonts: Poppins + Outfit -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+/* ============================================================
+   ROOT VARIABLES — Central color / spacing / font system
+   ============================================================ */
+:root{
+  --violet:#7C3AED;
+  --purple:#9333EA;
+  --blue:#3B82F6;
+  --cyan:#06B6D4;
+  --pink:#EC4899;
+  --white:#FFFFFF;
+
+  --glass-bg: rgba(255,255,255,0.10);
+  --glass-border: rgba(255,255,255,0.25);
+  --radius: 25px;
+  --shadow-soft: 0 20px 60px rgba(0,0,0,0.35);
+
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Poppins', sans-serif;
 }
 
-body{
-    background:linear-gradient(135deg,#040404,#10172d,#040404);
-    color:white;
-    overflow-x:hidden;
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body{
+  width:100%; height:100%;
+  font-family: var(--font-body);
+  overflow:hidden;
+  background:#0b0620;
+  color:var(--white);
 }
 
-.section{
-    position:relative;
-    width:100%;
-    min-height:100vh;
-    overflow:hidden;
-    background:#050505;
-    padding:80px 60px;
+/* ============================================================
+   ANIMATED GRADIENT BACKGROUND (behind everything)
+   ============================================================ */
+.bg-animated{
+  position:fixed; inset:0; z-index:-3;
+  background: linear-gradient(120deg, var(--violet), var(--purple), var(--blue), var(--cyan), var(--pink));
+  background-size: 400% 400%;
+  animation: gradientFlow 18s ease infinite;
+}
+@keyframes gradientFlow{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
 }
 
-.section::before{
-    content:"";
-    position:absolute;
-    inset:0;
-    background-image:
-    radial-gradient(white 1px, transparent 1px);
-    background-size:35px 35px;
-    opacity:.15;
-}
-.big-title{
-    position:absolute;
-    right:60px;
-    top:20px;
-    font-size:120px;
-    font-weight:900;
-    color:transparent;
-    -webkit-text-stroke:2px rgba(255,255,255,.2);
-    z-index:1;
-}
-.heading{
-    position:relative;
-    z-index:2;
-    text-align:center;
-    margin-bottom:70px;
+/* Dark overlay so glass cards pop */
+.bg-overlay{
+  position:fixed; inset:0; z-index:-2;
+  background: radial-gradient(circle at 30% 20%, rgba(0,0,0,0.05), rgba(5,2,20,0.65) 70%);
 }
 
-.heading h3{
-    color:#ff8d32;
-    font-size:32px;
-    font-weight:300;
+/* Floating blobs */
+.blob{
+  position:fixed;
+  border-radius:50%;
+  filter: blur(60px);
+  opacity:0.55;
+  z-index:-1;
+  animation: floatBlob 12s ease-in-out infinite;
+}
+.blob1{ width:380px; height:380px; background:var(--pink); top:-100px; left:-100px; animation-duration:14s;}
+.blob2{ width:420px; height:420px; background:var(--cyan); bottom:-140px; right:-100px; animation-duration:16s;}
+.blob3{ width:260px; height:260px; background:var(--purple); top:40%; left:60%; animation-duration:10s;}
+.blob4{ width:220px; height:220px; background:var(--blue); bottom:10%; left:10%; animation-duration:13s;}
+
+@keyframes floatBlob{
+  0%,100%{ transform: translate(0,0) scale(1); }
+  33%{ transform: translate(40px,-30px) scale(1.08); }
+  66%{ transform: translate(-30px,25px) scale(0.95); }
 }
 
-.heading h1{
-    color:#ff8d32;
-    font-size:54px;
-    font-weight:bold;
+/* Sparkles */
+.sparkle{
+  position:fixed;
+  width:6px; height:6px;
+  background:var(--white);
+  border-radius:50%;
+  opacity:0.8;
+  box-shadow:0 0 8px 2px rgba(255,255,255,0.8);
+  animation: sparkleTwinkle 3s ease-in-out infinite;
+  z-index:-1;
 }
+@keyframes sparkleTwinkle{
+  0%,100%{ opacity:0.1; transform:scale(0.6);}
+  50%{ opacity:1; transform:scale(1.3);}
+}
+
+/* ============================================================
+   PRESENTATION SHELL
+   ============================================================ */
+.presentation{
+  position:relative;
+  width:100vw;
+  height:100vh;
+}
+
+/* Each "slide" fills the whole viewport — 16:9 feel via padding/box */
+.slide{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 4vh 5vw;
+  opacity:0;
+  visibility:hidden;
+  transform: translateX(60px) scale(0.98);
+  transition: opacity 0.7s ease, transform 0.7s ease, visibility 0.7s;
+  pointer-events:none;
+}
+.slide.active{
+  opacity:1;
+  visibility:visible;
+  transform: translateX(0) scale(1);
+  pointer-events:auto;
+}
+.slide.prev-out{
+  transform: translateX(-60px) scale(0.98);
+}
+
+.slide-inner{
+  width:100%;
+  max-width:1300px;
+  height:100%;
+  max-height:860px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2rem;
+}
+
+/* Slide number label */
+.slide-tag{
+  position:absolute;
+  top:3vh; left:5vw;
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:3px;
+  font-size:0.85rem;
+  color:rgba(255,255,255,0.65);
+  text-transform:uppercase;
+}
+
+/* ============================================================
+   GLASS CARD — the core reusable visual unit
+   ============================================================ */
+.glass{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:var(--radius);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.glass:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 25px 70px rgba(124,58,237,0.45);
+  border-color: rgba(255,255,255,0.5);
+}
+
+/* Neon glow border accent */
+.glow{
+  position:relative;
+}
+.glow::before{
+  content:'';
+  position:absolute; inset:-2px;
+  border-radius: calc(var(--radius) + 2px);
+  padding:2px;
+  background: linear-gradient(135deg, var(--pink), var(--cyan), var(--violet));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity:0.7;
+  animation: glowPulse 4s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes glowPulse{
+  0%,100%{ opacity:0.4; }
+  50%{ opacity:0.9; }
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+h1,h2,h3,h4{ font-family: var(--font-display); font-weight:700; }
+
+.eyebrow{
+  font-family:var(--font-display);
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-size:0.85rem;
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin-bottom:0.5rem;
+}
+
+.gradient-text{
+  background: linear-gradient(90deg, var(--pink), var(--purple), var(--cyan));
+  background-size:200% auto;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation: shineText 6s linear infinite;
+}
+@keyframes shineText{
+  to{ background-position:200% center; }
+}
+
+p, li{ font-size:1rem; line-height:1.6; color:rgba(255,255,255,0.92); }
+
+/* ============================================================
+   FADE / ZOOM / SLIDE ANIMATION UTILITY CLASSES
+   ============================================================ */
+.fade-up{ animation: fadeUp 0.9s ease both; }
+.zoom-in{ animation: zoomIn 0.9s ease both; }
+.slide-left{ animation: slideLeft 0.9s ease both; }
+.delay-1{ animation-delay:0.15s; }
+.delay-2{ animation-delay:0.3s; }
+.delay-3{ animation-delay:0.45s; }
+.delay-4{ animation-delay:0.6s; }
+.delay-5{ animation-delay:0.75s; }
+.delay-6{ animation-delay:0.9s; }
+
+@keyframes fadeUp{
+  from{ opacity:0; transform:translateY(35px);}
+  to{ opacity:1; transform:translateY(0);}
+}
+@keyframes zoomIn{
+  from{ opacity:0; transform:scale(0.8);}
+  to{ opacity:1; transform:scale(1);}
+}
+@keyframes slideLeft{
+  from{ opacity:0; transform:translateX(50px);}
+  to{ opacity:1; transform:translateX(0);}
+}
+
+/* Floating card ambient motion */
+.floaty{ animation: floatCard 5s ease-in-out infinite; }
+@keyframes floatCard{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-12px); }
+}
+
+/* ============================================================
+   NAVIGATION CONTROLS
+   ============================================================ */
+.nav-controls{
+  position:fixed;
+  bottom:3vh; left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:1.2rem;
+  z-index:50;
+}
+.nav-btn{
+  width:56px; height:56px;
+  border-radius:50%;
+  border:1px solid var(--glass-border);
+  background:var(--glass-bg);
+  backdrop-filter:blur(14px);
+  color:var(--white);
+  font-size:1.2rem;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 rgba(236,72,153,0);
+}
+.nav-btn:hover{
+  background: linear-gradient(135deg, var(--violet), var(--pink));
+  box-shadow: 0 0 25px rgba(236,72,153,0.8);
+  transform: scale(1.1);
+}
+.nav-btn:active{ transform:scale(0.95); }
+
+.dots{ display:flex; gap:8px; }
+.dot{
+  width:9px; height:9px; border-radius:50%;
+  background:rgba(255,255,255,0.35);
+  cursor:pointer;
+  transition: all 0.3s ease;
+}
+.dot.active{
+  background: linear-gradient(135deg, var(--cyan), var(--pink));
+  width:26px; border-radius:6px;
+  box-shadow: 0 0 12px rgba(6,182,212,0.8);
+}
+
+.progress-label{
+  position:fixed; bottom:3vh; right:5vw;
+  font-family:var(--font-display); font-size:0.9rem;
+  color:rgba(255,255,255,0.7); letter-spacing:1px;
+  z-index:50;
+}
+
+/* ============================================================
+   GRID / LAYOUT HELPERS
+   ============================================================ */
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; }
+.grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:1.3rem; }
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:1.8rem; }
+.flex-center{ display:flex; align-items:center; justify-content:center; }
+.flex-between{ display:flex; align-items:center; justify-content:space-between; }
+
+.card{
+  padding:1.8rem;
+  display:flex; flex-direction:column; gap:0.8rem;
+}
+.card i.card-icon{
+  font-size:2.1rem;
+  background: linear-gradient(135deg, var(--cyan), var(--pink));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.card h3{ font-size:1.15rem; }
+.card p{ font-size:0.92rem; color:rgba(255,255,255,0.82); }
+
+/* Pill tag */
+.pill{
+  display:inline-flex; align-items:center; gap:0.4rem;
+  padding:0.4rem 1rem;
+  border-radius:50px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid var(--glass-border);
+  font-size:0.8rem;
+  font-weight:500;
+}
+
+/* ============================================================
+   SLIDE 1 — COVER
+   ============================================================ */
+.cover-slide .slide-inner{ text-align:center; align-items:center; gap:1.2rem; }
+.cover-badge{
+  padding:0.5rem 1.3rem; border-radius:50px;
+  font-size:0.85rem; font-weight:600; letter-spacing:1px;
+}
+.cover-title{
+  font-size:5rem; line-height:1.05;
+  letter-spacing:-2px;
+}
+.cover-sub{
+  font-size:1.3rem; max-width:700px;
+  color:rgba(255,255,255,0.85);
+  font-weight:300;
+}
+.hero-illustration{
+  display:flex; gap:1.5rem; margin-top:1rem;
+}
+.avatar-orb{
+  width:90px; height:90px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.1rem;
+  border:1px solid var(--glass-border);
+}
+.avatar-orb:nth-child(1){ background: linear-gradient(135deg, var(--violet), var(--blue)); }
+.avatar-orb:nth-child(2){ background: linear-gradient(135deg, var(--pink), var(--purple)); margin-top:-20px; width:110px; height:110px; font-size:2.6rem;}
+.avatar-orb:nth-child(3){ background: linear-gradient(135deg, var(--cyan), var(--blue)); }
+
+/* ============================================================
+   SLIDE 2 — WHAT IS ADOLESCENCE
+   ============================================================ */
 .timeline{
-    position:relative;
-    z-index:2;
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-top:60px;
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; padding:1.5rem 0;
+}
+.timeline::before{
+  content:''; position:absolute; top:50%; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--violet), var(--cyan), var(--pink));
+  border-radius:5px;
+}
+.timeline-point{
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+}
+.timeline-dot{
+  width:20px; height:20px; border-radius:50%;
+  background:var(--white);
+  box-shadow: 0 0 15px 4px rgba(236,72,153,0.7);
+}
+.timeline-label{ font-size:0.85rem; font-weight:600; }
+
+/* ============================================================
+   SLIDE 4 — brain illustration
+   ============================================================ */
+.brain-orb{
+  width:180px; height:180px; border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.5), transparent 60%),
+              linear-gradient(135deg, var(--violet), var(--pink));
+  display:flex; align-items:center; justify-content:center;
+  font-size:4.5rem;
+  box-shadow: 0 0 60px rgba(147,51,234,0.6);
 }
 
-svg{
-    position:absolute;
-    left:0;
-    top:180px;
-    width:100%;
-    height:250px;
-    z-index:1;
+/* ============================================================
+   SLIDE 9 — CONCLUSION / STAIRCASE
+   ============================================================ */
+.staircase{
+  display:flex; align-items:flex-end; gap:1rem; height:220px;
+  justify-content:center;
 }
-
-.step{
-    width:15%;
-    position:relative;
-    z-index:2;
+.stair-step{
+  width:80px;
+  border-radius:14px 14px 0 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0.08));
+  border:1px solid var(--glass-border);
+  display:flex; align-items:flex-start; justify-content:center;
+  padding-top:0.6rem;
+  font-size:1.4rem;
 }
+.stair-step:nth-child(1){ height:40%; }
+.stair-step:nth-child(2){ height:60%; }
+.stair-step:nth-child(3){ height:80%; }
+.stair-step:nth-child(4){ height:100%; background: linear-gradient(180deg, var(--pink), var(--violet)); }
 
-.number{
-    color:#ff8d32;
-    font-size:70px;
-    font-weight:bold;
-    margin-bottom:10px;
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1000px){
+  .cover-title{ font-size:3rem; }
+  .grid-3, .grid-4{ grid-template-columns:1fr 1fr; }
+  .grid-2{ grid-template-columns:1fr; }
+  .slide-inner{ overflow-y:auto; }
 }
-
-.step h2{
-    font-size:30px;
-    margin-bottom:12px;
-}
-
-.step p{
-    color:#ddd;
-    line-height:1.6;
-    font-size:15px;
-}
-
-.product{
-    position:absolute;
-    left:34%;
-    top:170px;
-    width:140px;
-    transform:rotate(-28deg);
-    z-index:5;
-}
-
-.product img{
-    width:100%;
-}
-
-.award{
-    position:absolute;
-    right:70px;
-    bottom:70px;
-    display:flex;
-    align-items:center;
-    background:white;
-    color:#12366e;
-    border-radius:8px;
-    padding:18px 28px;
-    font-size:38px;
-    font-weight:bold;
-    box-shadow:0 15px 30px rgba(0,0,0,.4);
-}
-.badge{
-    width:120px;
-    height:120px;
-    background:#ffd37a;
-    border-radius:50%;
-    border:12px solid #294b89;
-    margin-left:20px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:60px;
-    color:#294b89;
-}
-
-@media(max-width:1100px){
-
-.timeline{
-    flex-wrap:wrap;
-    gap:40px;
-}
-
-.step{
-    width:45%;
-}
-
-.big-title{
-    font-size:70px;
-}
-
-.heading h1{
-    font-size:38px;
-}
-
-.award{
-    position:relative;
-    margin-top:80px;
-    right:auto;
-    bottom:auto;
-}
-
-.product{
-    display:none;
-}
-
-svg{
-    display:none;
-}
-
+@media (max-width: 640px){
+  .grid-3, .grid-4{ grid-template-columns:1fr; }
+  .cover-title{ font-size:2.2rem; }
+  .nav-btn{ width:46px; height:46px; }
 }
 </style>
 </head>
-
 <body>
 
-<section class="section">
-<div class="glow glow1"></div>
-<div class="glow glow2"></div>
-<div class="glow glow3"></div>
+<!-- ================= BACKGROUND LAYERS ================= -->
+<div class="bg-animated"></div>
+<div class="bg-overlay"></div>
+<div class="blob blob1"></div>
+<div class="blob blob2"></div>
+<div class="blob blob3"></div>
+<div class="blob blob4"></div>
+<div id="sparkle-container"></div>
 
-<div class="big-title">PER-DEV</div>
+<!-- ================= PRESENTATION ================= -->
+<div class="presentation" id="presentation">
 
-<div class="heading">
-<h3>GROUP-6</h3>
-<h1>EARLY ADULTHOOD</h1>
+  <!-- SLIDE 1 : COVER -->
+  <section class="slide active cover-slide" data-index="0">
+    <span class="slide-tag">EARLY ADULTHOOD · 01</span>
+    <div class="slide-inner">
+      <div class="cover-badge glass zoom-in" style="align-self:center;">
+        <i class="fa-solid fa-seedling"></i> Growth & Development Series
+      </div>
+      <h1 class="cover-title gradient-text fade-up delay-1">EARLY ADULTHOOD<br>(19–40 Years)</h1>
+      <p class="cover-sub fade-up delay-2">A vibrant journey of change — where bodies grow, minds sharpen, emotions deepen, and identity takes shape.</p>
+
+      <div class="hero-illustration fade-up delay-3">
+        <div class="avatar-orb floaty" style="animation-delay:0s;"><i class="fa-solid fa-person"></i></div>
+        <div class="avatar-orb floaty" style="animation-delay:0.6s;"><i class="fa-solid fa-people-group"></i></div>
+        <div class="avatar-orb floaty" style="animation-delay:1.2s;"><i class="fa-solid fa-child-reaching"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2 : WHAT IS ADOLESCENCE -->
+  <section class="slide" data-index="1">
+    <span class="slide-tag">Definition · 02</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Understanding the Stage</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">What is Adolescence?</h2>
+
+      <div class="glass glow card fade-up delay-2" style="max-width:820px;">
+        <i class="fa-solid fa-quote-left card-icon"></i>
+        <p style="font-size:1.15rem;">Adolescence is the transitional stage of physical, cognitive, emotional and social growth between <strong>childhood</strong> and <strong>adulthood</strong> — typically spanning ages <strong>12 to 18</strong>. It is marked by puberty, identity formation, and the search for independence.</p>
+      </div>
+
+      <div class="timeline fade-up delay-3" style="margin-top:1rem;">
+        <div class="timeline-point">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">12–14<br><span style="font-weight:300; color:rgba(255,255,255,0.7);">Early Adolescence</span></div>
+        </div>
+        <div class="timeline-point">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">15–16<br><span style="font-weight:300; color:rgba(255,255,255,0.7);">Middle Adolescence</span></div>
+        </div>
+        <div class="timeline-point">
+          <div class="timeline-dot"></div>
+          <div class="timeline-label">17–18<br><span style="font-weight:300; color:rgba(255,255,255,0.7);">Late Adolescence</span></div>
+        </div>
+      </div>
+
+      <div class="glass card fade-up delay-4" style="max-width:820px; flex-direction:row; align-items:center; gap:1.2rem;">
+        <i class="fa-solid fa-lightbulb card-icon" style="font-size:1.8rem;"></i>
+        <p style="margin:0;"><strong>Example:</strong> A 13-year-old experiencing a sudden growth spurt while also questioning family rules for the first time — a classic sign of early adolescence.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3 : PHYSICAL DEVELOPMENT -->
+  <section class="slide" data-index="2">
+    <span class="slide-tag">Physical Growth · 03</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Body Changes</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">Physical Development</h2>
+
+      <div class="grid-3" style="margin-top:1rem;">
+        <div class="glass card fade-up delay-2">
+          <i class="fa-solid fa-mars card-icon"></i>
+          <h3>Boys</h3>
+          <p>Broadening shoulders, voice deepening, facial & body hair growth, increased muscle mass.</p>
+        </div>
+        <div class="glass card fade-up delay-3">
+          <i class="fa-solid fa-venus card-icon"></i>
+          <h3>Girls</h3>
+          <p>Widening of hips, breast development, onset of menstruation, growth spurt occurs earlier.</p>
+        </div>
+        <div class="glass card fade-up delay-4">
+          <i class="fa-solid fa-people-arrows card-icon"></i>
+          <h3>Both</h3>
+          <p>Rapid height increase, skin changes (acne), increased sweat & oil glands, hormonal surges.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4 : COGNITIVE DEVELOPMENT -->
+  <section class="slide" data-index="3">
+    <span class="slide-tag">Thinking & Reasoning · 04</span>
+    <div class="slide-inner">
+      <div class="grid-2" style="align-items:center;">
+        <div>
+          <div class="eyebrow fade-up">Mind Expansion</div>
+          <h2 style="font-size:2.4rem;" class="fade-up delay-1">Cognitive Development</h2>
+          <p class="fade-up delay-2" style="margin-top:0.8rem; max-width:480px;">According to <strong>Jean Piaget</strong>, adolescents enter the <strong>Formal Operational Stage</strong> — where abstract thinking, logic, and hypothetical reasoning fully emerge.</p>
+          <div class="grid-4" style="margin-top:1.5rem; grid-template-columns:1fr 1fr;">
+            <div class="glass card fade-up delay-3">
+              <i class="fa-solid fa-brain card-icon"></i>
+              <h3 style="font-size:1rem;">Abstract Thought</h3>
+            </div>
+            <div class="glass card fade-up delay-4">
+              <i class="fa-solid fa-flask card-icon"></i>
+              <h3 style="font-size:1rem;">Hypothetical Reasoning</h3>
+            </div>
+            <div class="glass card fade-up delay-5">
+              <i class="fa-solid fa-chess-knight card-icon"></i>
+              <h3 style="font-size:1rem;">Problem Solving</h3>
+            </div>
+            <div class="glass card fade-up delay-6">
+              <i class="fa-solid fa-compass card-icon"></i>
+              <h3 style="font-size:1rem;">Future Planning</h3>
+            </div>
+          </div>
+        </div>
+        <div class="flex-center zoom-in delay-2">
+            <div class="brain-orb floaty"><i class="fa-solid fa-brain"></i></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 : EMOTIONAL DEVELOPMENT -->
+  <section class="slide" data-index="4">
+    <span class="slide-tag">Feelings & Regulation · 05</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Inner World</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">Emotional Development</h2>
+
+      <div class="grid-4" style="margin-top:1rem;">
+        <div class="glass card fade-up delay-2">
+          <span style="font-size:2rem;">🎭</span>
+          <h3>Mood Swings</h3>
+          <p>Frequent emotional shifts driven by hormonal changes.</p>
+        </div>
+        <div class="glass card fade-up delay-3">
+          <span style="font-size:2rem;">😰</span>
+          <h3>Stress</h3>
+          <p>Academic, social & identity pressures increase sensitivity to stress.</p>
+        </div>
+        <div class="glass card fade-up delay-4">
+          <span style="font-size:2rem;">💪</span>
+          <h3>Confidence</h3>
+          <p>Self-esteem grows through achievement, acceptance & self-discovery.</p>
+        </div>
+        <div class="glass card fade-up delay-5">
+          <span style="font-size:2rem;">🧘</span>
+          <h3>Emotional Control</h3>
+          <p>Gradual development of self-regulation and coping skills.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 : SOCIAL DEVELOPMENT -->
+  <section class="slide" data-index="5">
+    <span class="slide-tag">Relationships · 06</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Widening Circles</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">Social Development</h2>
+
+      <div class="grid-3" style="margin-top:1rem;">
+        <div class="glass card fade-up delay-2">
+          <i class="fa-solid fa-user-group card-icon"></i>
+          <h3>Friendship</h3>
+          <p>Deeper, more meaningful peer bonds replace childhood playgroups.</p>
+        </div>
+        <div class="glass card fade-up delay-3">
+          <i class="fa-solid fa-crown card-icon"></i>
+          <h3>Leadership</h3>
+          <p>Opportunities to lead in clubs, teams, and group projects build confidence.</p>
+        </div>
+        <div class="glass card fade-up delay-4">
+          <i class="fa-solid fa-comments card-icon"></i>
+          <h3>Communication</h3>
+          <p>Improved expression of ideas, opinions, and emotions with others.</p>
+        </div>
+        <div class="glass card fade-up delay-5">
+          <i class="fa-solid fa-users-rectangle card-icon"></i>
+          <h3>Peer Pressure</h3>
+          <p>Increased influence of friend groups on choices and behavior.</p>
+        </div>
+        <div class="glass card fade-up delay-6">
+          <i class="fa-solid fa-school card-icon"></i>
+          <h3>School Clubs</h3>
+          <p>Extracurriculars build teamwork, belonging, and new skills.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 : MORAL & SPIRITUAL DEVELOPMENT -->
+  <section class="slide" data-index="6">
+    <span class="slide-tag">Values & Beliefs · 07</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Inner Compass</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">Moral & Spiritual Development</h2>
+
+      <div class="grid-4" style="margin-top:1rem;">
+        <div class="glass card fade-up delay-2">
+          <i class="fa-solid fa-handshake-angle card-icon"></i>
+          <h3>Honesty</h3>
+          <p>Growing understanding of truthfulness and integrity.</p>
+        </div>
+        <div class="glass card fade-up delay-3">
+          <i class="fa-solid fa-heart-circle-check card-icon"></i>
+          <h3>Values</h3>
+          <p>Personal principles form through family, culture, and experience.</p>
+        </div>
+        <div class="glass card fade-up delay-4">
+          <i class="fa-solid fa-scale-balanced card-icon"></i>
+          <h3>Right vs Wrong</h3>
+          <p>Independent ethical reasoning replaces rule-based obedience.</p>
+        </div>
+        <div class="glass card fade-up delay-5">
+          <i class="fa-solid fa-dove card-icon"></i>
+          <h3>Personal Beliefs</h3>
+          <p>Exploration of faith, purpose, and personal meaning begins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 : COMMON CHALLENGES -->
+  <section class="slide" data-index="7">
+    <span class="slide-tag">Real Struggles · 08</span>
+    <div class="slide-inner">
+      <div class="eyebrow fade-up">Navigating Difficulty</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">Common Challenges</h2>
+
+      <div class="grid-3" style="margin-top:1rem;">
+        <div class="glass card glow fade-up delay-2" style="border-left:4px solid var(--violet);">
+          <i class="fa-solid fa-book card-icon"></i>
+          <h3>Academic Stress</h3>
+          <p>Pressure from grades, exams, and future planning.</p>
+        </div>
+        <div class="glass card glow fade-up delay-3" style="border-left:4px solid var(--pink);">
+          <i class="fa-solid fa-user-group card-icon"></i>
+          <h3>Peer Pressure</h3>
+          <p>Desire to fit in can lead to risky decisions.</p>
+        </div>
+        <div class="glass card glow fade-up delay-4" style="border-left:4px solid var(--cyan);">
+          <i class="fa-solid fa-mirror card-icon"></i>
+          <h3>Body Image</h3>
+          <p>Comparisons and appearance-based insecurity.</p>
+        </div>
+        <div class="glass card glow fade-up delay-5" style="border-left:4px solid var(--blue);">
+          <i class="fa-solid fa-mobile-screen card-icon"></i>
+          <h3>Social Media</h3>
+          <p>Constant comparison and digital validation seeking.</p>
+        </div>
+        <div class="glass card glow fade-up delay-6" style="border-left:4px solid var(--purple);">
+          <i class="fa-solid fa-house-crack card-icon"></i>
+          <h3>Family Conflicts</h3>
+          <p>Push for independence can create tension at home.</p>
+        </div>
+        <div class="glass card glow fade-up delay-6" style="border-left:4px solid var(--pink);">
+          <i class="fa-solid fa-briefcase card-icon"></i>
+          <h3>Career Choices</h3>
+          <p>Overwhelming decisions about future paths.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 : CONCLUSION -->
+  <section class="slide" data-index="8">
+    <span class="slide-tag">Wrap Up · 09</span>
+    <div class="slide-inner" style="align-items:center; text-align:center;">
+      <div class="eyebrow fade-up">The Journey Continues</div>
+      <h2 style="font-size:2.6rem;" class="fade-up delay-1">A Growth Journey</h2>
+
+      <div class="staircase fade-up delay-2">
+        <div class="stair-step glass">🌱</div>
+        <div class="stair-step glass">🌿</div>
+        <div class="stair-step glass">🌳</div>
+        <div class="stair-step glass">🌟</div>
+      </div>
+
+      <div class="glass card fade-up delay-3" style="max-width:750px; text-align:left;">
+        <p style="text-align:center; font-size:1.05rem;">Adolescence is a bridge — physically, cognitively, emotionally, socially and morally — between childhood and adulthood. With the right support, this stage becomes a launchpad for confident, capable adults.</p>
+      </div>
+
+      <h2 class="gradient-text zoom-in delay-4" style="font-size:2.8rem; margin-top:1rem;">Thank You! 🎉</h2>
+      <p class="fade-up delay-5" style="font-size:1.2rem;">Any Questions?</p>
+    </div>
+  </section>
+
 </div>
 
-<div class="product">
-<img src="" alt="image">
+<!-- ================= NAVIGATION ================= -->
+<div class="nav-controls">
+  <button class="nav-btn" id="prevBtn" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+  <div class="dots" id="dotsContainer"></div>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
 </div>
+<div class="progress-label" id="progressLabel">01 / 09</div>
 
-<svg viewBox="0 0 1400 300" preserveAspectRatio="none">
-<path d="
-M0 120
-C150 0 250 0 350 120
-S550 240 700 120
-S950 0 1100 120
-S1300 240 1400 120"
-fill="none"
-stroke="#19295d"
-stroke-width="4"/>
-</svg>
+<script>
+/* ============================================================
+   JAVASCRIPT — Slide navigation logic
+   ============================================================ */
+(function(){
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let current = 0;
 
-<div class="timeline">
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const dotsContainer = document.getElementById('dotsContainer');
+  const progressLabel = document.getElementById('progressLabel');
 
-<div class="step">
-<div class="number">1</div>
-<h2>Introduction</h2>
-<p>Early adulthood (ages 19–40) is a stage of independence, career growth, and increased responsibilities. It is an important period for building relationships, achieving financial stability, and making life decisions that shape the future.
-</p>
-</div>
+  // Build navigation dots dynamically
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.classList.add('dot');
+    if(i === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  });
+  const dots = Array.from(dotsContainer.children);
 
-<div class="step">
-<div class="number">2</div>
-<h2>Physical & Cognitive Development</h2>
-<p>Physical and cognitive development in early adulthood is marked by peak health, strength, and brain maturity. Individuals develop better judgment, problem-solving, logical thinking, and decision-making skills, although physical abilities gradually decline over time.
-</p>
-</div>
+  function updateUI(){
+    slides.forEach((s, i) => {
+      s.classList.remove('active');
+      if(i === current) s.classList.add('active');
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    progressLabel.textContent = String(current+1).padStart(2,'0') + ' / ' + String(total).padStart(2,'0');
 
-<div class="step">
-<div class="number">3</div>
-<h2>Emotional & Social Development</h2>
-<p>Emotional and social development refers to how a person learns to understand emotions, build relationships, and interact with others during early adulthood.
-</p>
-</div>
+    // Re-trigger entrance animations each time slide becomes active
+    const activeSlide = slides[current];
+    const animatedEls = activeSlide.querySelectorAll('.fade-up, .zoom-in, .slide-left');
+    animatedEls.forEach(el => {
+      el.style.animation = 'none';
+      // Force reflow to restart animation
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  }
 
-<div class="step">
-<div class="number">4</div>
-<h2>Development Tasks & Responsibilities</h2>
-<p>During early adulthood, people focus on building careers, becoming financially independent, balancing work and personal life, supporting their families, and achieving future goals.</p>
-</div>
+  function goToSlide(index){
+    if(index < 0 || index >= total) return;
+    current = index;
+    updateUI();
+  }
 
-<div class="step">
-<div class="number">5</div>
-<h2>CONCLUSIONS</h2>
-<p>Early adulthood (ages 19–40) is a stage of growth and independence. It brings challenges such as work stress, finances, and balancing responsibilities, which can be managed through good planning, self-care, and support from others.
-</p>
-</div>
-</div>
-</section>
+  prevBtn.addEventListener('click', () => goToSlide(current - 1));
+  nextBtn.addEventListener('click', () => goToSlide(current + 1));
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight' || e.key === 'PageDown') goToSlide(current + 1);
+    if(e.key === 'ArrowLeft' || e.key === 'PageUp') goToSlide(current - 1);
+  });
+
+  // Basic swipe support for touch devices
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', (e) => {
+    const touchEndX = e.changedTouches[0].screenX;
+    const diff = touchEndX - touchStartX;
+    if(Math.abs(diff) > 60){
+      if(diff < 0) goToSlide(current + 1);
+      else goToSlide(current - 1);
+    }
+  });
+
+  // Generate ambient sparkles randomly across the screen
+  const sparkleContainer = document.getElementById('sparkle-container');
+  function spawnSparkle(){
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('sparkle');
+    sparkle.style.left = Math.random()*100 + 'vw';
+    sparkle.style.top = Math.random()*100 + 'vh';
+    sparkle.style.animationDuration = (2 + Math.random()*3) + 's';
+    sparkleContainer.appendChild(sparkle);
+    setTimeout(() => sparkle.remove(), 5000);
+  }
+  setInterval(spawnSparkle, 400);
+
+  updateUI();
+})();
+</script>
 </body>
 </html>
